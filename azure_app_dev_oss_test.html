@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure App Dev/OSS Trainees Test</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  .question { margin-bottom: 15px; }
+  .answers { margin-left: 20px; }
+  .correct { color: green; font-weight: bold; }
+  .incorrect { color: red; font-weight: bold; }
+  #timer { font-size: 1.2em; font-weight: bold; margin-bottom: 20px; }
+  #result { margin-top: 20px; font-size: 1.2em; }
+</style>
+</head>
+<body>
+<h1>Azure App Dev/OSS Trainees Test</h1>
+<div id="timer">Time Remaining: 60:00</div>
+<form id="quizForm">
+
+<!-- Questions will be inserted here -->
+
+<button type="button" onclick="submitQuiz()">Submit</button>
+</form>
+<div id="result"></div>
+
+<script>
+const questions = [
+  // Networking on Azure App Service
+  {id: 1, question: "What protocol is primarily used for secure communication in Azure App Service?", options: ["HTTP", "FTP", "HTTPS", "SMTP"], answer: 2},
+  {id: 2, question: "Which Azure App Service feature restricts access based on IP address?", options: ["Scaling", "Access Restrictions", "Deployment Slots", "Backup"], answer: 1},
+  {id: 3, question: "What is the default port for HTTP traffic on Azure App Service?", options: ["80", "443", "21", "25"], answer: 0},
+  {id: 4, question: "Which Azure service enables private network connectivity to App Service?", options: ["Azure Front Door", "VNet Integration", "Azure CDN", "Traffic Manager"], answer: 1},
+  {id: 5, question: "How can you secure traffic between your app and a database in Azure?", options: ["Use public endpoints", "Use VNet Service Endpoints", "Disable SSL", "Use FTP"], answer: 1},
+
+  // Identity in Azure App Service
+  {id: 6, question: "Which Azure service manages user identities for App Service authentication?", options: ["Azure AD", "Azure DevOps", "Azure Monitor", "Azure Blob Storage"], answer: 0},
+  {id: 7, question: "What feature allows users to sign in with social accounts on App Service?", options: ["Managed Identity", "Authentication/Authorization", "Scaling", "Deployment Slots"], answer: 1},
+  {id: 8, question: "What is a Managed Identity used for in Azure App Service?", options: ["Scaling", "App Monitoring", "Secure resource access", "DNS"], answer: 2},
+  {id: 9, question: "Which protocol is commonly used for SSO in Azure App Service?", options: ["FTP", "SAML", "SMTP", "POP3"], answer: 1},
+  {id: 10, question: "What is the benefit of using Azure AD with App Service?", options: ["Faster scaling", "Automated backups", "Centralized identity management", "Lower cost"], answer: 2},
+
+  // Deployment in Azure App Service
+  {id: 11, question: "What is the default deployment slot in Azure App Service?", options: ["Production", "Staging", "Testing", "Development"], answer: 0},
+  {id: 12, question: "Which tool can be used for CI/CD with Azure App Service?", options: ["Azure DevOps", "Excel", "Word", "PowerPoint"], answer: 0},
+  {id: 13, question: "What deployment method uploads a ZIP file to App Service?", options: ["FTP", "ZIP Deploy", "Git", "Web Deploy"], answer: 1},
+  {id: 14, question: "Which command-line tool manages Azure resources?", options: ["az CLI", "git", "npm", "pip"], answer: 0},
+  {id: 15, question: "What is the purpose of deployment slots?", options: ["Scaling", "Testing in isolation", "Monitoring", "Billing"], answer: 1},
+
+  // Azure Function configuration and performance troubleshooting
+  {id: 16, question: "Which trigger type is commonly used to start an Azure Function?", options: ["HTTP Trigger", "Timer Trigger", "Blob Trigger", "All of the above"], answer: 3},
+  {id: 17, question: "How can you monitor Azure Function performance?", options: ["Azure Monitor", "Excel", "PowerPoint", "Word"], answer: 0},
+  {id: 18, question: "What is the default runtime for new Azure Functions?", options: [".NET", "Python", "Node.js", "Depends on selection"], answer: 3},
+  {id: 19, question: "Which setting controls the maximum execution time of a function?", options: ["Timeout", "Memory", "CPU", "Disk"], answer: 0},
+  {id: 20, question: "What tool helps diagnose Azure Function errors?", options: ["Kudu", "Excel", "FTP", "SMTP"], answer: 0},
+
+  // WordPress on Azure App Service
+  {id: 21, question: "Which CMS is commonly used with Azure App Service for blogging?", options: ["Drupal", "Joomla", "WordPress", "Magento"], answer: 2},
+  {id: 22, question: "Which database is typically used with WordPress on Azure?", options: ["SQL Server", "MySQL", "Cosmos DB", "MongoDB"], answer: 1},
+  {id: 23, question: "How can you scale WordPress on Azure App Service?", options: ["Manual scaling", "Auto-scaling", "Both", "None"], answer: 2},
+  {id: 24, question: "Which plugin helps with WordPress performance on Azure?", options: ["Jetpack", "WP Super Cache", "Yoast SEO", "Akismet"], answer: 1},
+  {id: 25, question: "What is the recommended method to back up WordPress on Azure?", options: ["Manual copy", "Azure Backup", "FTP", "Email"], answer: 1},
+];
+
+// Replicate questions to reach 40 with slight variations
+for(let i=26; i<=40; i++) {
+  let baseQ = questions[(i-1) % 25];
+  questions.push({
+    id: i,
+    question: baseQ.question + " (Q" + i + ")",
+    options: baseQ.options,
+    answer: baseQ.answer
+  });
+}
+
+function createQuiz() {
+  const form = document.getElementById('quizForm');
+  questions.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'question';
+    const qText = document.createElement('p');
+    qText.textContent = q.id + ". " + q.question;
+    div.appendChild(qText);
+
+    const answersDiv = document.createElement('div');
+    answersDiv.className = 'answers';
+
+    q.options.forEach((opt, idx) => {
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'q' + q.id;
+      input.value = idx;
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(opt));
+      answersDiv.appendChild(label);
+      answersDiv.appendChild(document.createElement('br'));
+    });
+
+    div.appendChild(answersDiv);
+    form.insertBefore(div, form.lastElementChild);
+  });
+}
+
+function submitQuiz() {
+  let score = 0;
+  let total = questions.length;
+  let resultHTML = '';
+
+  questions.forEach(q => {
+    const selected = document.querySelector('input[name="q' + q.id + '"]:checked');
+    const userAnswer = selected ? parseInt(selected.value) : -1;
+    if(userAnswer === q.answer) {
+      score++;
+      resultHTML += `<p>Question ${q.id}: <span class='correct'>Correct</span></p>`;
+    } else {
+      resultHTML += `<p>Question ${q.id}: <span class='incorrect'>Incorrect</span>. Correct answer: ${q.options[q.answer]}</p>`;
+    }
+  });
+
+  resultHTML += `<h3>Your score: ${score} / ${total}</h3>`;
+  document.getElementById('result').innerHTML = resultHTML;
+  clearInterval(timerInterval);
+  document.getElementById('quizForm').querySelector('button').disabled = true;
+}
+
+// Timer
+let timeLeft = 60 * 60; // 1 hour in seconds
+const timerElement = document.getElementById('timer');
+const timerInterval = setInterval(() => {
+  if(timeLeft <= 0) {
+    clearInterval(timerInterval);
+    submitQuiz();
+    alert('Time is up! Your test has been submitted automatically.');
+    return;
+  }
+  timeLeft--;
+  let minutes = Math.floor(timeLeft / 60);
+  let seconds = timeLeft % 60;
+  timerElement.textContent = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}, 1000);
+
+window.onload = createQuiz;
+</script>
+</body>
+</html>
